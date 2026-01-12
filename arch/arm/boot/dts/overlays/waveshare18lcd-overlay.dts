@@ -1,0 +1,80 @@
+/*
+ * waveshare18lcd-overlay.dts
+ *
+ * ST7735S based SPI LCD display
+ * Waveshare 1.8" 160x128
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target = <&spidev0>;
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+
+	fragment@1 {
+		target = <&gpio>;
+		__overlay__ {
+			waveshare18lcd_pins: waveshare18lcd_pins {
+				brcm,pins = <27 25>;
+				brcm,function = <1>; /* out */
+			};
+			backlight_pins: backlight_pins {
+				brcm,pins = <18>;
+				brcm,function = <1>; /* out */
+			};
+		};
+	};
+
+	fragment@2 {
+		target-path = "/";
+		__overlay__ {
+			wsh18_backlight: backlight {
+				compatible = "gpio-backlight";
+				gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&backlight_pins>;
+			};
+		};
+	};
+
+	fragment@3 {
+		target = <&spi0>;
+		__overlay__ {
+			/* needed to avoid dtc warning */
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+
+			wsh18: waveshare18lcd@0 {
+				compatible = "waveshare,waveshare18lcd";
+				reg = <0>;
+				spi-max-frequency = <32000000>;
+				dc-gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
+				reset-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
+				rotation = <90>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&waveshare18lcd_pins>;
+				backlight = <&wsh18_backlight>;
+			};
+		};
+	};
+
+	__overrides__ {
+		speed = <&wsh18>,"spi-max-frequency:0";
+		rotate = <&wsh18>,"rotation:0";
+		dc_pin = <&wsh18>,"dc-gpios:4", <&waveshare18lcd_pins>,"brcm,pins:4";
+		reset_pin = <&wsh18>,"reset-gpios:4",
+			    <&waveshare18lcd_pins>,"brcm,pins:0";
+		led_pin = <&wsh18_backlight>,"gpios:4",
+			  <&backlight_pins>,"brcm,pins:0";
+	};
+};

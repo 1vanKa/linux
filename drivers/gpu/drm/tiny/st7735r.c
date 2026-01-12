@@ -142,6 +142,15 @@ static const struct st7735r_cfg jd_t18003_t01_cfg = {
 	.write_only	= true,
 };
 
+/* Waveshare 1.8" uses st7735s, but it works with this driver */
+static const struct st7735r_cfg waveshare_18in_lcd_cfg = {
+	.mode		= { DRM_SIMPLE_MODE(128, 160, 28, 35) },
+	/* Cannot read from Waveshare 1.8" display via SPI */
+	.write_only	= true,
+	.left_offset = 1,
+	.top_offset = 2,
+};
+
 static const struct st7735r_cfg rh128128t_cfg = {
 	.mode		= { DRM_SIMPLE_MODE(128, 128, 25, 26) },
 	.left_offset	= 2,
@@ -166,6 +175,7 @@ static const struct drm_driver st7735r_driver = {
 static const struct of_device_id st7735r_of_match[] = {
 	{ .compatible = "jianda,jd-t18003-t01", .data = &jd_t18003_t01_cfg },
 	{ .compatible = "okaya,rh128128t", .data = &rh128128t_cfg },
+	{ .compatible = "waveshare,waveshare18lcd", .data = &waveshare_18in_lcd_cfg },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, st7735r_of_match);
@@ -173,6 +183,7 @@ MODULE_DEVICE_TABLE(of, st7735r_of_match);
 static const struct spi_device_id st7735r_id[] = {
 	{ "jd-t18003-t01", (uintptr_t)&jd_t18003_t01_cfg },
 	{ "rh128128t", (uintptr_t)&rh128128t_cfg },
+	{ "waveshare18lcd", (uintptr_t)&waveshare_18in_lcd_cfg },
 	{ },
 };
 MODULE_DEVICE_TABLE(spi, st7735r_id);

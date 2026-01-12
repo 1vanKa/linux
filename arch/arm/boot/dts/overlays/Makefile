@@ -357,6 +357,7 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
 	watterott-display.dtbo \
 	waveshare-can-fd-hat-mode-a.dtbo \
 	waveshare-can-fd-hat-mode-b.dtbo \
+	waveshare18lcd.dtbo \
 	wifimac.dtbo \
 	wittypi.dtbo \
 	wm8960-soundcard.dtbo \

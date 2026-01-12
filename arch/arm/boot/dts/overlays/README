@@ -5975,6 +5975,18 @@ Load:   dtoverlay=waveshare-can-fd-hat-mode-b
 Params: <None>
 
 
+Name:   waveshare18lcd
+Info:   Overlay for the SPI-connected Waveshare 1.8" 160x128 displays,
+        based on the ST7735S chip.
+        This overlay uses the newer DRM/KMS "Tiny" driver.
+Load:   dtoverlay=waveshare18lcd,<param>=<val>
+Params: rotate                  Display rotation {0,90,180,270} (default 90)
+        speed                   SPI bus speed in Hz (default 4000000)
+        dc_pin                  GPIO pin for D/C (default 25)
+        reset_pin               GPIO pin for RESET (default 27)
+        led_pin                 GPIO used to control backlight (default 18)
+
+
 Name:   wifimac
 Info:   Override the MAC address for the onboard WiFi. Not Pi 5.
 Load:   dtoverlay=wifimac,<param>=<val>
